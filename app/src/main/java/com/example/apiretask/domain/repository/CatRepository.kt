@@ -5,5 +5,5 @@ import com.example.apiretask.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface CatRepository {
-    fun getRandomCatImages(count: Int = 10): Flow<Resource<List<CatImageDto>>>
+    fun getRandomCatImages(count: Int = 10, page: Int? = null): Flow<Resource<List<CatImageDto>>>
 }

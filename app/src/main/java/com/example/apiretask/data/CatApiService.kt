@@ -6,5 +6,8 @@ import retrofit2.http.Query
 
 interface CatApiService {
     @GET("images/search")
-    suspend fun getRandomCats(@Query("limit") limit: Int = 10): Response<List<CatImageDto>>
+    suspend fun getRandomCats(
+        @Query("limit") limit: Int = 10,
+        @Query("page") page: Int? = null
+    ): Response<List<CatImageDto>>
 }

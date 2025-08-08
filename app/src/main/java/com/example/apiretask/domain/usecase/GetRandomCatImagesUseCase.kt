@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetRandomCatImagesUseCase @Inject constructor(
     private val repository: CatRepository
 ) {
-    operator fun invoke(count: Int = 10): Flow<Resource<List<CatImageDto>>> {
-        return repository.getRandomCatImages(count)
+    operator fun invoke(count: Int = 10, page: Int? = null): Flow<Resource<List<CatImageDto>>> {
+        return repository.getRandomCatImages(count, page)
     }
 }

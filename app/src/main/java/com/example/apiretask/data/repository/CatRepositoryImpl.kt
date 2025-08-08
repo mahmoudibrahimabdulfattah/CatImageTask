@@ -14,29 +14,30 @@ class CatRepositoryImpl @Inject constructor(
     private val apiService: CatApiService
 ) : CatRepository {
 
-    override fun getRandomCatImages(count: Int): Flow<Resource<List<CatImageDto>>> = flow {
-        try {
-            emit(Resource.Loading())
+    override fun getRandomCatImages(count: Int, page: Int?): Flow<Resource<List<CatImageDto>>> =
+        flow {
+            try {
+                emit(Resource.Loading())
 
-            val response = apiService.getRandomCats()
+                val response = apiService.getRandomCats(limit = count, page = page)
 
-            if (response.isSuccessful) {
-                val catDtos = response.body()
-                if (catDtos.isNullOrEmpty()) {
-                    emit(Resource.Error("No cat images found"))
+                if (response.isSuccessful) {
+                    val catDtos = response.body()
+                    if (catDtos.isNullOrEmpty()) {
+                        emit(Resource.Error("No cat images found"))
+                    } else {
+                        // Always append new images, do not limit
+                        emit(Resource.Success(catDtos))
+                    }
                 } else {
-                    val limitedCatDtos = catDtos.take(count)
-                    emit(Resource.Success(limitedCatDtos))
+                    emit(Resource.Error("Failed to fetch cat images: ${response.code()}"))
                 }
-            } else {
-                emit(Resource.Error("Failed to fetch cat images: ${response.code()}"))
+            } catch (e: HttpException) {
+                emit(Resource.Error("API error: ${e.localizedMessage ?: "Unknown error"}"))
+            } catch (e: IOException) {
+                emit(Resource.Error("Network error. Please check your internet connection"))
+            } catch (e: Exception) {
+                emit(Resource.Error("An unexpected error occurred: ${e.localizedMessage ?: "Unknown error"}"))
             }
-        } catch (e: HttpException) {
-            emit(Resource.Error("API error: ${e.localizedMessage ?: "Unknown error"}"))
-        } catch (e: IOException) {
-            emit(Resource.Error("Network error. Please check your internet connection"))
-        } catch (e: Exception) {
-            emit(Resource.Error("An unexpected error occurred: ${e.localizedMessage ?: "Unknown error"}"))
         }
-    }
 }

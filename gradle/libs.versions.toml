@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.9.3"
-agp = "8.5.1"
+agp = "8.6.0"
 coil = "3.0.3"
 composeBom = "2024.11.00"
 converterGson = "2.11.0"
